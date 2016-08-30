@@ -1,2 +1,3 @@
 # termspec-hausarbeit
-Class Paper for the termspec project
+
+Backup and Version Control of the corresponding Class Paper for the termspec project
