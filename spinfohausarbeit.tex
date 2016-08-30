@@ -66,22 +66,24 @@ ItalicFont = OldStandard-Italic.otf]
 \date{(Vorgelegt am \today)}
 
 
+\usepackage{amsthm}
+\newtheorem*{document frequency}{Definition}
 
 
 \begin{document}
-\begin{titlepage}
+% \begin{titlepage}
 \maketitle
 
-\abstract{Ladida, ladidu}
+% \abstract{Ladida, ladidu}
 
 
-\thispagestyle{empty}
-\end{titlepage}
+% \thispagestyle{empty}
+% \end{titlepage}
 
 
 
-\tableofcontents
-\newpage
+% \tableofcontents
+% \newpage
 
 \section{Einleitung}
 \subsection*{Semantische Spezifität}
@@ -100,8 +102,24 @@ ItalicFont = OldStandard-Italic.otf]
 \subsection{Document Frequency}
 Bereits \citet{sparckjones1972} schlug ein statistisches Maß für die semantische Spezifität eines Wortes vor. Es ist die simple Frequenz, mit der ein Wort im Korpus auftaucht, das ein Indiz für die Spezifität darstellen soll. \citet{Caraballo99determiningthe} konnten die \emph{document frequency} als Eigenschaft von Worten dazu nutzen, für beliebige Wortpaare festzustellen, welches Wort  spezifischer oder genereller ist. Überprüft wurde das mit Beispielwortpaaren, die in einer Hyperonym- bzw. Hyponymrelation zueinander stehen: Das Wort \emph{Getränk} ist ein Oberbegriff zum Wort \emph{Cola}. Für diese Art von Relation gilt: Wenn ein Wort ein Oberbegriff eines anderen ist, so ist der Unterbegriff semantisch spezifischer als der Oberbegriff. Die klar unterschiedene Spezifität ist also eine notwendige Bedingung für die Hyperonym- bzw. Hyponymrelation. Das macht solche Wortpaare zu natürlichen Kandidaten, um Maße für semantische Spezifität zu testen.
 
+Insoweit es die Textgrundlage hergibt, also in Dokumenten geordnet ist, verwende ich die \emph{document frequency} als erste Annäherung an ein brauchbares Maß für die semantische Spezifität. Die Berechnung ist simpel und performant. Entscheidend wird die Frage sein, ob es den komplexeren Modellen gelingt, eine höhere Erfolgsrate zu erzielen. Daher verwende ich die \emph{document frequency} als Benchmark für die anderen Modelle.
+
+Weil das spätere Ziel ist, Worte in unterschiedlichen Korpora miteinander zu vergleichen, muss die \emph{document frequency} noch normiert werden, wodurch das Maß etwas unabhängiger vom verwendeten Korpus wird.
+
+\begin{document frequency}
+Sei $N$ die Gesamtzahl aller untersuchen Dokumente und $df$ die Anzahl der Dokumente, in denen das Fokuswort auftritt. Dann ist die normierte document frequency $df_n$
+\begin{equation}
+    df_n = \frac{df}{N}
+\end{equation}
+\end{document frequency}
 
 \subsection{Satzkontexte vs. Kontextfenster}
+
+Grundlage dieser Arbeit ist das \emph{Word Space Model} (WSM) oder auch Termvektormodell, das unter anderem sehr ausführlich in \citet{sahlgren2006word} beschrieben wird. Das WSM 
+
+Paradigmatischer vs. Syntagmatischer Kontext
+
+Zur Berechnung der verschiedenen Maße muss zunächst eine Word-Word Kookkurrenzmatrix erstellt werden
 
 \subsection{Größe des paradigmatischen Kontexts}
 
