@@ -7,7 +7,7 @@
 \usepackage{mathtools}
 \usepackage{stmaryrd}
 \usepackage{enumitem}
-
+\usepackage{graphicx}
 
 \usepackage{relsize}
 % \linespread{1.2}
@@ -88,7 +88,13 @@ ItalicFont = OldStandard-Italic.otf]
 \newpage
 
 \section{Einleitung}
+
+Weeds et al. (2004) proposed a notion of distributional generality, observing that more general words tend to occur in a larger variety of contexts than more specific words. For example, we would expect to be able to replace any occurrence of cat with animal and so all of the contexts of cat must be plausible
+contexts for animal. However, not all of the contexts of animal would be plausible for cat, e.g., “the monstrous animal barked at the intruder”.
+
 \subsection*{Semantische Spezifität}
+
+Was ist die Challenge des Experiments?
 
 \citet[11]{sparckjones1972} Beschreibt die Spezifität eines Begriffes so:
 \begin{quote}
@@ -184,33 +190,34 @@ Meine These: Ein kleiner $nzds$-Wert eines Wortes spricht für eine höhere sema
 
 \subsection{Maße für die Kookkurrenzen} \label{coocmeasures}
 
-Zusätzlich zur Auswahl der Art der Kookkurrenz muss noch ein Maß zur Bestimmung der Kookkurrenz gewählt werden. In dieser Arbeit habe ich dafür vier verschiedene Maße herangezogen. Ich gebe hier die Maße für den Fall der Satzkookkurrenzen an. Für die gerichtetete Fensterkookkurrenz ergeben sich leicht andere Maße, was sich auch darin zeigt, das die resultierende Wort-Wort-Kookkurrenzmatrix nicht mehr symmetrisch zur Hauptdiagonalen ist.
+Zusätzlich zur Auswahl der Art der Kookkurrenz muss noch ein Maß zur Bestimmung der Kookkurrenz gewählt werden. In dieser Arbeit habe ich dafür vier verschiedene Maße herangezogen. Ich gebe hier die Maße für den Fall der Fensterkookkurenzen an. Für die Satzkookkurrenzen ergeben sich leicht andere Maße, auch weil die resultierende Matrix symmetrisch ist. Bei direktionalen Kontextfenstern gilt das nicht notwendigerweise (und praktisch fast nie). Daher ist bei jedem Maß zu beachten: score$_{ij}$ ist nicht zwingend gleich score$_{ji}$.
 
 \subsubsection{Binäre Kookkurrenz}
 
 Die binäre Kookkurrenz zeigt an, ob ein Wort mit einem anderen Wort im gesamten Kontext mindestens mit einer bestimmten Frequenz in Kookkurrenz steht.
 
 \begin{defi}
-Seien $K_{i}$ und $K_{j}$ die Mengen aller Strukturen (Sätze, Fenster), in denen die Wörter $w_i$ resp. $w_j$ auftreten, und $m$ die Mindestanzahl an Kookkurrenzen. Dann ist die \textbf{binäre Kookkurrenz} $binary_{ij}$
+Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, und $m$ die Mindestanzahl an Kookkurrenzen. Dann ist die \textbf{binäre Kookkurrenz} $binary_{ij}$
+
 \begin{equation*}
    binary_{ij} =
    \begin{cases}
-        1 & \text{Falls |$K_{i} \cap K_{j}| \ge m$}\\
+        1 & \text{Falls |$K_{ij}| \ge m$}\\
         0 & \text{Falls nicht.}\\
    \end{cases}
 \end{equation*}
 \end{defi}
 
-Es wäre also $b_{ij}$ gleich $1$, genau dann wenn beide Wörter in mindestens $m$ verschiedenen Sätzen gemeinsam auftreten.
+Es wäre also $b_{ij}$ gleich $1$ genau dann wenn $w_j$ in mindestens $m$ Kontextfenstern von $w_i$ auftritt. 
 
 \subsubsection{Frequenz der Kookkurrenz}
 
 Die Frequenz der Kookkurrenz zählt jedes Auftreten der Kookkurenzen.
 
 \begin{defi}
-Seien $K_{i}$ und $K_{j}$ die Mengen aller Strukturen (Sätze, Fenster), in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist die \textbf{Frequenz} $freq_{ij}$
+Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt. Dann ist die \textbf{Frequenz} $freq_{ij}$
 \begin{equation*}
-   freq_{ij} = |K_{i} \cap K_{j}|
+   freq_{ij} = |K_{ij}|
 \end{equation*}
 \end{defi}
 
@@ -219,7 +226,7 @@ Seien $K_{i}$ und $K_{j}$ die Mengen aller Strukturen (Sätze, Fenster), in dene
 Der Dice-Koeffizient zieht auch in Betracht, wie häufig die Worte im Korpus generall auftreten. Ein sehr häufiges Wort etwa steht mit vielen anderen Wörtern in Kookkurrenz, ohne dass dieses Auftreten besonders signifikant sein müsste. Der Dice-Koeffizient „bestraft“ solche Wörter, indem durch die Gesamtzahl der Vorkommnisse geteilt wird \citep[S. 299]{manning1999}.
 
 \begin{defi}
-Seien $K_{i}$ und $K_{j}$ die Mengen aller Strukturen (Sätze, Fenster), in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist der \textbf{Dice-Koeffizient} $dice_{ij}$
+Seien $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt und $K_{i}$ und $K_{j}$ die Mengen aller Kontextfenster, in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist der \textbf{Dice-Koeffizient} $dice_{ij}$
 \begin{equation*}
    dice_{ij} = \frac{2 |K_{i} \cap K_{j}| }{|K_{i}| + |K_{j}|}
 \end{equation*}
@@ -234,8 +241,8 @@ Zur Berechnung wird zunächst eine Kontigenztabelle erstellt:
     \begin{center}
         \begin{tabular}{l|r|r}
                     & $w_i$ & $\neg w_i$ \\ \hline
-            $w_j$ &  Anzahl Sätze mit $w_i$ und $w_j$ & Anzahl Sätze ohne $w_i$, mit $w_j$\\ \hline
-            $\neg w_j$ &  Anzahl Sätze mit $w_i$, ohne $w_j$ & Anzahl Sätze ohne $w_i$ und $w_j$
+            $w_j$ &  Anzahl $w_i$-Fenster mit $w_j$ & Anzahl $w_j$-Fenster ohne $w_i$\\ \hline
+            $\neg w_j$ &  Anzahl $w_i$-Fenster ohne $w_j$ & Anzahl Fenster ohne $w_i$ und $w_j$
         \end{tabular}
     \end{center}
 \end{table}
@@ -257,13 +264,34 @@ Welche Informationen über semantische Sepzifität lassen sich nun aus der so ge
 
 Was also scheinbar gefordert ist, ist ein Maß pro Wort für die semantische Spezifität, das sich dann mit dem Maß des anderen Wortes vergleichen lässt.
 
-Ist zur Bestimmung der Spezifität eines Wortes nur der direkte Kontext relevant, oder könnte es sein, dass auch die statistischen Eigenschaften der Wörter des Kontextes eine Rolle spielen? Wenn ein Wort mit eher vielen verschiedenen Worten im Kontext steht, die Kontextworte sich untereinander allerdings semantisch sehr ähneln, scheint das ein Wort mit hoher semantischer Spezifität zu sein. Steht ein Wort stattdessen mit eher wenigen Worten im Kontext, diese Worte sind jedoch völlig unterschiedlich aus verschiedensten Gebieten, scheint das ein Wort mit geringer semantischer Spezifität zu sein.
+Ist zur Bestimmung der Spezifität eines Wortes nur der direkte Kontext relevant, oder könnte es sein, dass auch die statistischen Eigenschaften der Wörter des Kontextes eine Rolle spielen? Wenn ein Wort mit eher vielen verschiedenen Worten im Kontext steht, die Kontextworte sich untereinander allerdings semantisch sehr ähneln, scheint das ein Wort mit hoher semantischer Spezifität zu sein. Steht ein Wort stattdessen mit eher wenigen Worten im Kontext, diese Worte sind jedoch völlig unterschiedlich aus verschiedensten Gebieten, scheint das ein Wort mit geringer semantischer Spezifität zu sein (vgl. Abbildung \ref{kontext}).
+
 
 Angenommen, die statistischen Eigenschaften des Kontextes sind relevant für die Spezifität, dann könnte die semantische Nähe der Kontextworte zueinander ein sehr aussagekräftiges Maß für die semantische Spezifität eines Begriffes sein.
 
 Wie ließe sich das in ein Modell übersetzen?
 
 Der Featurevektor des Fokuswortes beschreibt, mit welchen anderen Worten das Fokuswort in Kookkurrenz steht. Für jedes dieser Wörter des Kontextes gibt es nun wiederum einen Featurevektor, der die statistischen Eigenschaften des Wortes beschreibt. Über die distributional hypothesis des Word Space Models lässt sich nun argumentieren, dass geringe intrakontextuelle Distanz im Vektorraum eine hohe semantische Nähe des Kontextes indiziert, und damit einen Hinweis auf die semantische Spezifität des Fokuswortes geben.
+
+\begin{figure}
+    \includegraphics[width = \textwidth]{kontext}
+    \caption{Streuung und Kompaktheit verschiedener Kontexte. Die beliebig dimensionalen Featurevektoren werden hier schematisch als Punkte im 2dimensionalen Raum dargestellt. Die Kontexte sind jeweils alle Featurevektoren des Kontextes eines Wortes.}
+    \label{kontext}
+\end{figure}
+
+Ein geeignetes Maß für die Kompaktheit des Kontextes zu finden, ist also entscheidend. Hierbei lässt sich ausnutzen, dass die Menge an Featurevektoren, die über den Kontext eines Wortes festgelegt wird, die Form eines \emph{Clusters} annimmt. In der Literatur finden sich einige Ansätze zur Evaluierung von verschiedenen Clusteralgorithmen (Zitat Zitat Zitat). Für dieses Problem sind besonders Maße für die Kompaktheit eines einzelnen Clusters interessant, ohne dabei andere Cluster zu berücksichtigen. Ich möchte also für zwei zu vergleichende Wörter nicht wissen, wie gut ihre Kontexe in Cluster aufgeteilt wurden oder wie sehr die Cluster überlappen (obwohl das sicher auch einige interessante Informationen über die statistischen Eigenschaften der Kontexte liefern würde), sondern evaluieren, wie dicht oder kompakt die jeweiligen Cluster sind. Das Maß soll dann möglichst vom verwendeten Featureraum abstrahieren und die Kompaktheit von Clustern über verschiedenen Vektorräume miteinander vergleichbar machen.
+
+Ein Konzept, das aus der Clusterevaluierung nutzbar gemacht werden kann, ist der \emph{Centroid} bzw. geometrische Schwerpunkt, der den Mittelpunkt aller Featurevektoren repräsentiert. Wie weit sind die einzelnen Featurevektoren vom Schwerpunkt entfernt? Hohe Distanz lässt auf eine weite Streuung schließen, niedrige Distanz auf Kompaktheit. Um das Maß nicht allzusehr zu verkomplizieren, habe ich zur Bestimmung der Verteilung der Distanz der einzelnen Featurevektoren zum Schwerpunkt den Durschnitt aller Distanzen gewählt.
+
+Das Maß für die semantische Spezifität eines Begriffes berechnet sich also wie folgt:
+
+\begin{defi}
+Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wort $w_i$ in einer Kontextrelation steht (s.o.), und $c_i$ der geometrische Schwerpunkt von $X_i$. Dann ist der \textbf{Mean Distance to Centroid Score} $mdcs_i$
+
+\begin{equation*}
+   mdcs_i = \sum_{x_j \in X_i} \frac{ dist(x_j, c_i) }{|X_i|}
+\end{equation*}
+\end{defi}
 
 \subsection{Getestete Maße}
 
