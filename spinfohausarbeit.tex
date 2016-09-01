@@ -125,7 +125,7 @@ Weil das spätere Ziel ist, Worte in unterschiedlichen Korpora miteinander zu ve
 \begin{defi}
 Sei $N$ die Gesamtzahl aller untersuchen Dokumente und $df_i$ die Anzahl der Dokumente, in denen das Fokuswort $w_i$ auftritt. Dann ist die \textbf{normierte document frequency} $dfn_i$
 \begin{equation}
-    dfn_i = \frac{df_i}{N}
+    dfn_i = \frac{df_i}{N}.
 \end{equation}
 \end{defi}
 
@@ -182,7 +182,7 @@ Die Idee dieses Maßes ist es daher, einfach zu zählen, mit wie viele von Null 
 \begin{defi}
 Sei $N$ die Gesamtzahl aller (unique) Worte im Korpus und $n_i$ die Anzahl aller (unique) Worte, mit denen das Wort $w_i$ in Kookkurrenz steht, d.h. an dessen Eintrag der Featurevektor von $w_i$ einen von Null verschiedenen Wert aufweist. Dann ist der \textbf{Non-Zero Dimension Score} $nzds_i$
 \begin{equation}
-    nzds_i = \frac{n_i}{N}
+    nzds_i = \frac{n_i}{N}.
 \end{equation}
 \end{defi}
 
@@ -197,27 +197,27 @@ Zusätzlich zur Auswahl der Art der Kookkurrenz muss noch ein Maß zur Bestimmun
 Die binäre Kookkurrenz zeigt an, ob ein Wort mit einem anderen Wort im gesamten Kontext mindestens mit einer bestimmten Frequenz in Kookkurrenz steht.
 
 \begin{defi}
-Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, und $m$ die Mindestanzahl an Kookkurrenzen. Dann ist die \textbf{binäre Kookkurrenz} $binary_{ij}$
+Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, und $m$ die Mindestanzahl an Kookkurrenzen. Dann ist die \textbf{binäre Kookkurrenz}
 
 \begin{equation*}
-   binary_{ij} =
+   bin_{ij} =
    \begin{cases}
-        1 & \text{Falls |$K_{ij}| \ge m$}\\
+        1 & \text{Falls |$K_{ij}| \ge m$.}\\
         0 & \text{Falls nicht.}\\
    \end{cases}
 \end{equation*}
 \end{defi}
 
-Es wäre also $b_{ij}$ gleich $1$ genau dann wenn $w_j$ in mindestens $m$ Kontextfenstern von $w_i$ auftritt. 
+Es wäre also $bin_{ij}$ gleich $1$ genau dann wenn $w_j$ in mindestens $m$ Kontextfenstern von $w_i$ auftritt. 
 
 \subsubsection{Frequenz der Kookkurrenz}
 
-Die Frequenz der Kookkurrenz zählt jedes Auftreten der Kookkurenzen.
+Die Frequenz der Kookkurrenz zählt jedes Auftreten der Kookkurenzen \footnote{Eigentlich bezeichnet  'Frequenz' die relative Häufigkeit. Da aber in der Literatur 'Document Frequency' häufig als Anzahl der Dokumente verstanden wird und ich den Term hier auch so benutze, nenne ich der Konsistenz halber diesen Wert auch Frequenz. }.
 
 \begin{defi}
-Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt. Dann ist die \textbf{Frequenz} $freq_{ij}$
+Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, wobei $|X|$ die Kardinalzahl der Menge $X$ bezeichnet. Dann ist die \textbf{Frequenz}
 \begin{equation*}
-   freq_{ij} = |K_{ij}|
+   freq_{ij} = |K_{ij}|.
 \end{equation*}
 \end{defi}
 
@@ -226,9 +226,9 @@ Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $
 Der Dice-Koeffizient zieht auch in Betracht, wie häufig die Worte im Korpus generall auftreten. Ein sehr häufiges Wort etwa steht mit vielen anderen Wörtern in Kookkurrenz, ohne dass dieses Auftreten besonders signifikant sein müsste. Der Dice-Koeffizient „bestraft“ solche Wörter, indem durch die Gesamtzahl der Vorkommnisse geteilt wird \citep[S. 299]{manning1999}.
 
 \begin{defi}
-Seien $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt und $K_{i}$ und $K_{j}$ die Mengen aller Kontextfenster, in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist der \textbf{Dice-Koeffizient} $dice_{ij}$
+Seien $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt und $K_{i}$ und $K_{j}$ die Mengen aller Kontextfenster, in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist der \textbf{Dice-Koeffizient}
 \begin{equation*}
-   dice_{ij} = \frac{2 |K_{i} \cap K_{j}| }{|K_{i}| + |K_{j}|}
+   dice_{ij} = \frac{2 |K_{i} \cap K_{j}| }{|K_{i}| + |K_{j}|}.
 \end{equation*}
 \end{defi}
 
@@ -248,15 +248,41 @@ Zur Berechnung wird zunächst eine Kontigenztabelle erstellt:
 \end{table}
 
 \begin{defi}
-Sei K die Kontingenztabelle zweier Wörter $w_i$ und $w_j$, $O_{k,l}$ der Wert der Kontingenztafel in Zelle $k,l$ und $E_{k,l}$ der erwartete Wert für Zelle $k,l$, dann ist der Chi-Square-Wert $chi\_sq_{i,j}$
+Sei K die Kontingenztabelle zweier Wörter $w_i$ und $w_j$, $O_{k,l}$ der Wert der Kontingenztafel in Zelle $k,l$ und $E_{k,l}$ der erwartete Wert für Zelle $k,l$, dann ist der \textbf{Chi-Square-Wert}
 \begin{equation*}
-   chi\_sq_{ij} = \sum_{k,l} { \frac{ (O_{k,l} - E_{k,l})^2} {E_{k,l}}  }
+   chi_{ij} = \sum_{k,l} { \frac{ (O_{k,l} - E_{k,l})^2} {E_{k,l}}  }.
 \end{equation*}
 \end{defi}
 
 Für eine detailliertere Beschreibung inklusive Berechnung des erwarteten Werts siehe \citet[S. 169ff.]{manning1999}.
 
 \subsection{Distanzmaße im Vektorraum (fast unnötig)}
+
+Um die Unterschiede der Featurevektoren im Word Space Model zu berechnen, habe ich unterschiedliche Distanzmaße verwendet.
+
+\subsection{Standardized Euclidean Distanz}
+
+Die normale euklidische Distanz ist ein gutes erstes Maß für die Distanz. Allerdings wird hier jede Dimension des Raumes gleich gewichtet. Gibt es eine sehr große Varianz in dieser einen Dimension, so hat diese Dimension eine unverhältnismäßig große Auswirkung auf die Gesamtdistanz. Das ist z.B. der Fall, wenn physikalische Eigenschaft unterschiedlicher Einheiten in einem Featurevektor zusammengefasst werden. Das ist im Kookkurrenzraum zwar nicht der Fall, trotzdem können so einzelne sehr große Unterschiede unverhältnismäßig viel Ausschlag geben. Um diesen Effekt zu mindern, kann das Maß standarisiert werden. Dazu wird mit der reziproken Varianz des jeweiligen Features multipliziert.
+
+\begin{defi}
+Seien $u$ und $v$ die Featurevektoren der Worte $w_i$ und $w_j$, $u_k$ der $k$-te Wert des Featurevektors $u$. Dann ist die \textbf{Standardized Euclidean Distance}
+$$
+    se(x_i, x_j) = \sqrt{ \sum_{k} {\frac{1}{V_i}{ (u_k - v_k)^2 }} }.
+$$
+
+\end{defi}
+
+\subsection{Kosinusdistanz}
+
+Die Kosinusdistanz liefert ein bereits normalisiertes Maß dafür, wie stark zwei Vektoren korrellieren \citep[S. 300]{manning1999}. Sie verhält sich analog zur euklidischen Distanz für normalisierte Vektoren. Zu beachten ist, dass oben die \emph{Standardized}, nicht die normalisierte euklidische Distanz beschrieben wird.
+
+\begin{defi}
+Seien $u$ und $v$ die Featurevektoren der Worte $w_i$ und $w_j$, wobei $u \cdot v$ das Skalarprodukt von $u$ und $v$ bezeichnet und $|x|$ die Länge eines Vektors $x$. Dann ist die \textbf{Kosinusdistanz}
+$$
+    cos(x_i, x_j) = \frac{u \cdot v}{|u||v|}.
+$$
+\end{defi}
+
 
 \subsection{Score \#3: Semantische Nähe des Kontextes}
 
@@ -265,7 +291,6 @@ Welche Informationen über semantische Sepzifität lassen sich nun aus der so ge
 Was also scheinbar gefordert ist, ist ein Maß pro Wort für die semantische Spezifität, das sich dann mit dem Maß des anderen Wortes vergleichen lässt.
 
 Ist zur Bestimmung der Spezifität eines Wortes nur der direkte Kontext relevant, oder könnte es sein, dass auch die statistischen Eigenschaften der Wörter des Kontextes eine Rolle spielen? Wenn ein Wort mit eher vielen verschiedenen Worten im Kontext steht, die Kontextworte sich untereinander allerdings semantisch sehr ähneln, scheint das ein Wort mit hoher semantischer Spezifität zu sein. Steht ein Wort stattdessen mit eher wenigen Worten im Kontext, diese Worte sind jedoch völlig unterschiedlich aus verschiedensten Gebieten, scheint das ein Wort mit geringer semantischer Spezifität zu sein (vgl. Abbildung \ref{kontext}).
-
 
 Angenommen, die statistischen Eigenschaften des Kontextes sind relevant für die Spezifität, dann könnte die semantische Nähe der Kontextworte zueinander ein sehr aussagekräftiges Maß für die semantische Spezifität eines Begriffes sein.
 
@@ -283,19 +308,34 @@ Ein geeignetes Maß für die Kompaktheit des Kontextes zu finden, ist also entsc
 
 Ein Konzept, das aus der Clusterevaluierung nutzbar gemacht werden kann, ist der \emph{Centroid} bzw. geometrische Schwerpunkt, der den Mittelpunkt aller Featurevektoren repräsentiert. Wie weit sind die einzelnen Featurevektoren vom Schwerpunkt entfernt? Hohe Distanz lässt auf eine weite Streuung schließen, niedrige Distanz auf Kompaktheit. Um das Maß nicht allzusehr zu verkomplizieren, habe ich zur Bestimmung der Verteilung der Distanz der einzelnen Featurevektoren zum Schwerpunkt den Durschnitt aller Distanzen gewählt.
 
-Das Maß für die semantische Spezifität eines Begriffes berechnet sich also wie folgt:
+Das vorgeschlagene dritte Maß für die semantische Spezifität eines Begriffes berechnet sich also wie folgt:
 
 \begin{defi}
 Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wort $w_i$ in einer Kontextrelation steht (s.o.), und $c_i$ der geometrische Schwerpunkt von $X_i$. Dann ist der \textbf{Mean Distance to Centroid Score} $mdcs_i$
 
-\begin{equation*}
-   mdcs_i = \sum_{x_j \in X_i} \frac{ dist(x_j, c_i) }{|X_i|}
-\end{equation*}
+\begin{equation}
+   mdcs_i =  \frac{1}{|X_i|} \sum_{x_j \in X_i} dist(x_j, c_i).
+\end{equation}
 \end{defi}
+
+Die Menge der Wörter des Kontextes werden bei diesem Maß durch jeden von Null verschiedenen Wert im Featurevektor des Fokuswortes bestimmt. Um dem Umstand Rechnung zu tragen, dass die Kookkurrenz des Fokuswortes mit jedem Wort des Kontextes unterschiedlich ausgeprägt ist, verwende ich zusätzlich ein abgewandeltes Maß, das den kompletten Featurevektor des Kontextwortes mit der Ausprägung des zugehörigen Eintrags im Featurevektor des Fokuswortes skaliert.
+
+\begin{defi}
+Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wort $w_i$ in einer Kontextrelation steht (s.o.), $c_i$ der geometrische Schwerpunkt von $X_i$ und $a_{ij}$ der Eintrag des Featurevektors von Wort $w_i$ von Kontextwort $w_j$. Dann ist der \textbf{Scaled Mean Distance to Centroid Score} $sca_mdcs_i$
+
+
+$$
+  sca\_mdcs_i =  \frac{1}{|X_i|} \sum_{x_j \in X_i}  a_{ij} dist(x_j, c_i).
+$$
+
+\end{defi}
+
+Damit ist $mdcs$ also nur ein Spezialfall von $sca\_mdcs$ mit $a_{ij} = 1$ für alle $i,j$.
+
+Ein Ziel dieses Maßes ist es, das Resultat unabhängiger vom verwendeten Korpus zu machen. Ein Beispiel zur Verdeutlichung: Ein Korpus enthält ein Wort mit einer bestimmten \emph{Document Frequency}. Nun werden dem Korpus eine Menge von Texten hinzugefügt, die jedoch völlig andere Themengebieten behandeln und das Fokuswort nicht enthalten. Die \emph{Document Frequency} nimmt in starkem Maße ab. Angenommen der Kontext des Wortes ist auch nicht sonderlich stark in den hinzugefügten Texten vertreten, dann steigt die \emph{Mean Distance to Centroid} nicht oder nicht signifikant. 
 
 \subsection{Getestete Maße}
 
-\subsection{Wordpaare}
 
 \subsection{Resultate}
 
@@ -303,13 +343,19 @@ Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wo
 
 \subsection{Textgrundlage}
 
-\subsection{Verwendete Technologien}
 
 \subsection{Resultate}
 
 \section{Konklusion}
 
 \section{Ausblick}
+
+\section{Anhang}
+
+\subsection{Wordpaare}
+
+\subsection{Verwendete Technologien}
+
 
 Word Sense Disambiuation!
 
