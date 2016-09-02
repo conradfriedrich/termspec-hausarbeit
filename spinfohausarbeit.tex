@@ -8,6 +8,7 @@
 \usepackage{stmaryrd}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{courier}
 
 \usepackage{relsize}
 % \linespread{1.2}
@@ -86,42 +87,55 @@ ItalicFont = OldStandard-Italic.otf]
 
 \section{Einleitung}
 
-In dieser Arbeit verfolge ich zwei Ziele: Zum einen suche ich ein Maß für die semantische Spezifität von Begriffen. Dazu entwerfe ich, ausgehend von einigen Hypothesen, verschiedene Maße und teste diese dann mit Hilfe von Korpora und einem Testsatz von Wortpaaren. Zum anderen wende ich die so erprobten Maße auf die Fragestellung an, wie sich Anglizismen im Deutschen hinsichtlich ihrer semantischen Spezifität von ihren englischen Ursprungswörtern unterschieden. In Kapitel 2 und 3 beschäftige ich mich mit dem ersten Ziel, die Anwendung erfolgt in Kapitel 4.
-
-Ausgehend von folgenden drei Thesen stelle ich drei Maße für die semantische Spezifität vor:
+In dieser Arbeit verfolge ich zwei Ziele: Zum einen suche ich ein Maß für die semantische Spezifität von Begriffen. Dazu entwerfe ich, ausgehend von einigen Hypothesen, verschiedene Maße und teste diese dann mit Hilfe von Korpora und einem Testsatz von Wortpaaren. Zum anderen wende ich die so erprobten Maße auf die Fragestellung an, wie sich Anglizismen im Deutschen hinsichtlich ihrer semantischen Spezifität von ihren englischen Ursprungswörtern unterschieden. In Kapitel 2 und 3 beschäftige ich mich mit dem ersten Ziel, die Anwendung erfolgt in Kapitel 4. Ausgehend von folgenden drei Thesen stelle ich drei Maße für die semantische Spezifität vor:
 \begin{enumerate}
-    \item Semantisch spezifischere Wörter treten seltener auf.
-    \item Semantisch spezifischere Wörter stehen mit weniger verschiedenen Wörtern im Kontext
-    \item Semantisch spezifischere Wörter haben einen Kontext, der sich semantisch ähnlicher ist.
+    \item Spezifischere Wörter treten seltener auf.
+    \item Spezifischere Wörter stehen mit weniger verschiedenen Wörtern im Kontext.
+    \item Spezifischere Wörter verfügen über einen Kontext, der sich semantisch ähnlicher ist.
 \end{enumerate}
 
-These 1 tritt in dieser Arbeit in Form des Document Frequency Score auf (siehe Abschnitt \ref{df}), These 2 in Form des Non-Zero Dimensions Score (Abschnitt \ref{nzds}) und These 3 in Form des Mean Distance to Centroid Score (Abschnit \ref{mdcs}).
+These 1 tritt in dieser Arbeit in Form des \emph{Document Frequency Score} auf (siehe Abschnitt \ref{df}), These 2 in Form des \emph{Non-Zero Dimensions Score} (Abschnitt \ref{nzds}) und These 3 in Form des \emph{Mean Distance to Centroid Score} (Abschnit \ref{mdcs}).
 
-Die verwendeten Maße sind dabei statistische Maße, also Maße, die irgendetwas mit Zählen zu tun haben \citep[]{manning1999}. Konkreter: Maße, die sich auf die Anzahl bestimmter Eigenschaften von Wörtern in Textmengen beziehen. Welche Berechnungen man anschließend mit den gezählten Werten anstellt, legt das mathematische Modell der Arbeit fest. Ich werde dazu das Word Space Model verwenden, das in Abschnitt \ref{wsm} vorgestellt wird.
+Die verwendeten Maße sind dabei statistische Maße, also Maße, die irgendetwas mit Zählen zu tun haben \citep[]{manning1999}. Konkreter: Maße, die sich auf die Anzahl bestimmter Eigenschaften von Wörtern in Textmengen beziehen. Welche Berechnungen man anschließend mit den gezählten Werten anstellt, legt das mathematische Modell der Arbeit fest. Ich werde dazu das \emph{Word Space Model} verwenden, das in Abschnitt \ref{wsm} vorgestellt wird.
 
 \subsection*{Semantische Spezifität}
-Was ist eigentlich semantische Spezifität? \citet[11]{sparckjones1972} Beschreibt die Spezifität eines Begriffes so:
+Was ist eigentlich semantische Spezifität? \citet[S. 11]{sparckjones1972} Beschreibt die Spezifität eines Begriffes so:
 \begin{quote}
   Specificity ... is a semantic property of index terms: a term is more or less specific as its meaning is more or less detailed and precise.
 \end{quote}
 
-Ein Wort ist also eine spezifischere Bedeutung, wenn es konkreter, detaillierter oder präziser ist. Ich denke, dass man so schnell ein intuitives verständnis davon hat, was mit semantischer Spezifität gemeint ist. Anders formuliert könnte man auch sagen, dass ein Wort spezifischer ist, wenn es sich auf weniger Situationen anwenden lässt. Es schließt mehr Sachverhalte von vornherein aus. Bezogen etwa auf die Tierwelt sind spezifischere Bezeichnungen diejenigen mit der geringeren Extension: Mit 'Säugetier' kann man abertausende verschiedenste Tiere bezeichnen, mit 'Europäischer Feldhamster' muss ich schon einige sehr spezielle Tiere raussuchen, die ich korrekt damit bezeichne.
+Ein Wort hat also eine spezifischere Bedeutung, wenn es konkreter, detaillierter oder präziser ist. Ich denke, dass man so schnell ein intuitives verständnis davon hat, was mit semantischer Spezifität gemeint ist. Anders formuliert könnte man auch sagen, dass ein Wort spezifischer ist, wenn es sich auf weniger Situationen anwenden lässt. Es schließt mehr Sachverhalte von vornherein aus. Bezogen etwa auf die Tierwelt sind spezifischere Bezeichnungen diejenigen mit der geringeren Extension: Mit 'Säugetier' kann man abertausende verschiedenste Tiere bezeichnen, mit 'Europäischer Feldhamster' meine ich eine sehr spezielle Art von Tier.
 
+Mit diesem intuitiven Verständnis von Spezifität wird auch schnell klar, wieso der Kontext des Wortes ein Indikator für dessen Spezifität sein kann. Ein spezifisches Fachwort tritt vorrangig zusammen mit anderen Wörtern aus dem selben Themenbereich auf, der Kontext ist eher eng gefasst. Ein allgemeines, vielseitig anwendbares Wort tritt mit allen möglichen Wörtern zusammen auf. Der Kontext ist sehr weit. Auch \cite{weeds-weir-mccarthy:2004:COLING} stellen fest, dass generelle Terme eher in einem weiten Kontext auftreten als spezifischere Begriffe.
 
+Diese naheliegende Idee versuche ich in dieser Arbeit in ein mathematisches Modell zu übersetzen.
 
-Weeds et al. (2004) proposed a notion of distributional generality, observing that more general words tend to occur in a larger variety of contexts than more specific words. For example, we would expect to be able to replace any occurrence of cat with animal and so all of the contexts of cat must be plausible
-contexts for animal. However, not all of the contexts of animal would be plausible for cat, e.g., “the monstrous animal barked at the intruder”.
 \subsection*{Semantische Spezifität und Anglizismen}
 
+Ein Anglizismus ist ein Wort im Deutschen, das einen Ursprung im Englischen hat. \citet[S. 38]{schütte1996schöne} definiert so:
+
+\begin{quote}
+    Ein Anglizismus ist ein sprachliches Zeichen, das ganz oder teilweise aus englischen Morphemen besteht, unabhängig davon, ob es mit einer im englischen Sprachgebrauch üblichen Bedeutung verbunden ist oder nicht.
+\end{quote}
+
+\citet[S. 216]{burmasova2010empirische} fasst den Begriff etwas weiter:
+\begin{quote}
+    Alle sprachlichen Zeichen, deren englische Herkunft an der Form oder Semantik zu erkennen ist, gehören zu den Anglizismen.
+\end{quote}
+
+Weiter werden in der Literatur über verschiedene Paradigmen Kategorisierungsvorschläge gemacht, um den Begriff Anglizismus genauer zu bestimmen. Für meine Zwecke sind die Definitionen oben aber bereits ausreichend: Worte im Deutschen, die eine erkennbare englische Herkunft haben. Um Deutsch und Englisch miteinander zu vergleichen, muss allerdings eine eine-zu-eins-Zuordenbarkeit bestehen.
+
+Wie verhalten sich nun Anglizismen und ihre englischen Ursprungswörter in Bezug auf ihre semantische Spezifität? Findet eine Bedeutungsverschiebung statt? Ich stelle in dieser Arbeit die These auf, dass Anglizismen in ihrer Verwendung im Deutschen dazu tendieren, \textbf{spezieller} zu sein als ihre englischen Ursprungswörter.
+
+Erklärung?
 % \newpage
 \section{Ein Maß für die semantische Spezifität}
 
-Was ist die Challenge des Experiments?
+Das Maß für die semantische Spezifität soll in der Lage sein, von zwei Wörtern das semantisch spezifischere herauszusuchen.
 
-Für die Auswahl eines passendes Word Space Models gibt es verschiedene Optionen. Naheliegend ist etwa eine Dokument-Wort-Matrix, in der für jedes Dokument des Korpus angegeben wird, wie häufig jedes analysierte Wort des KOrpus darin auftritt. Eine solche vollständige Matrix ist eine Darstellung des sogenannten Dokumentenraums (\emph{Document Space})\citep[S.296]{manning1999}. Ebenfalls naheliegend ist eine Wort-Wort-Matrix, die die Relationen der Wörter im Korpus untereinander einzufangen versucht. Sie stellt den sogenannten Wortraum dar (\emph{Word Space}). Ich werde mich ihn dieser Arbeit statt auf den Dokumentenraum auf Methoden aus dem Wortraum stützen. \citet{Schutze:1994:CTT:2856823.2856847} argumentieren dafür, dass sowohl quantitativ als auch qualitativ reichhaltigere semantische Informationen auf Basis des Word Space Models gewonnen werden können.
+Für die Auswahl eines passendes Word Space Models gibt es verschiedene Optionen. Im Information Retrieval weit verbreitet ist etwa eine Dokument-Wort-Matrix, in der für jedes Dokument des Korpus angegeben wird, wie häufig jedes analysierte Wort des Korpus darin auftritt. Eine solche vollständige Matrix ist eine Darstellung des sogenannten Dokumentenraums (\emph{Document Space})\citep[S.296]{manning1999}. Ebenfalls weit verbreitet ist eine Wort-Wort-Matrix, die die Relationen der Wörter im Korpus untereinander einzufangen versucht. Sie stellt den sogenannten Wortraum dar (\emph{Word Space}). Ich werde mich ihn dieser Arbeit statt auf den Dokumentenraum vorrangig auf Methoden aus dem Wortraum stützen. \citet{Schutze:1994:CTT:2856823.2856847} argumentieren dafür, dass sowohl quantitativ als auch qualitativ reichhaltigere semantische Informationen auf Basis des \emph{Word Space Models} gewonnen werden können.
 
 Wie die Relationen zwischen Wörtern aussehen können und wie man mit ihnen eine Näherung der semantischen Spezifität berechnen kann, möchte ich in diesem Kapitel vorstellen. Dazu entwickele ich verschiedene Berechnungsmethoden und kombiniere diese erst einmal ohne starke theoretische Vorannahmen. Dann stelle ich ein Experiment vor, dass die Berechnungsmethoden auf ihre Tauglichkeit zur Berechnung der semantischen Spezifität prüft. Die vielversprechensten Methoden wende ich dann im anschließenden Kapitel auf die Fragestellung der semantischen Spezifität von Anglizismen an.
-
 
 \subsection{Score 1: Document Frequency} \label{df}
 Bereits \citet{sparckjones1972} schlug ein statistisches Maß für die semantische Spezifität eines Wortes vor. Es ist die simple Frequenz, mit der ein Wort im Korpus auftaucht, das ein Indiz für die Spezifität darstellen soll. \citet{Caraballo99determiningthe} konnten die \emph{document frequency} als Eigenschaft von Worten dazu nutzen, für beliebige Wortpaare festzustellen, welches Wort  spezifischer oder genereller ist. Überprüft wurde das mit Beispielwortpaaren, die in einer Hyperonym- bzw. Hyponymrelation zueinander stehen: Das Wort \emph{Getränk} ist ein Oberbegriff zum Wort \emph{Cola}. Für diese Art von Relation gilt: Wenn ein Wort ein Oberbegriff eines anderen ist, so ist der Unterbegriff semantisch spezifischer als der Oberbegriff. Die klar unterschiedene Spezifität ist also eine notwendige Bedingung für die Hyperonym- bzw. Hyponymrelation. Das macht solche Wortpaare zu natürlichen Kandidaten, um Maße für semantische Spezifität zu testen.
@@ -140,7 +154,7 @@ Sei $N$ die Gesamtzahl aller untersuchen Dokumente und $df_i$ die Anzahl der Dok
 Hat von zwei Wörtern, die wir miteinander vergleichen wollen das erste eine kleinere $dfn$ als das zweite, ist das nach \citet{Caraballo99determiningthe} eine gute Heuristik, auch eine höhere semantische Spezifität anzunehmen.
 
 \subsection{Das Word Space Model}\label{wsm}
-Grundlage dieser Arbeit ist das \emph{Word Space Model} (WSM) oder auch Termvektormodell, das unter anderem sehr ausführlich in \citet{sahlgren2006word} beschrieben wird. Das WSM erhält seine Relevanz in der Computerlinguistik hauptsächlich durch eine zentrale Überlegung:
+Grundlage dieser Arbeit ist das \emph{Word Space Model} (WSM) oder auch Termvektormodell, das unter anderem sehr ausführlich in \citet{sahlgren2006word} beschrieben wird, einen alternativen Überblick liefert \citet{Turney10fromfrequency}. Das WSM erhält seine Relevanz in der Computerlinguistik hauptsächlich durch eine zentrale Überlegung:
 \begin{quote}
     \textbf{The distributional hypothesis:} \emph{words with similar distributional properties have similar meanings.}
 \end{quote}
@@ -156,11 +170,9 @@ Zunächst müssen die Features, welche die Vektoren ausmachen, festgelegt werden
 
 \textbf{Satzkookkurrenzen} sind diejenigen Wörter, mit denen das Fokuswort gemeinsam in einem Satz auftritt. Gezählt werden dabei für zwei Wörter vorranging die Anzahl der Sätze, in denen die Wörter gemeinsam auftreten. Den Satzkontext des Fokuswortes bilden dann die Menge aller Wörter, die mit dem Fokuswort mindestens einmal gemeinsam in einem Satz auftreten.
 
-\textbf{Fensterkookkurrenzen} sind diejenigen Wörter, mit denen das Fokuswort innerhalb eines Fensters von festgelegter Größe gemeinsam auftritt. In Abgrenzung zur Satzkookkurrenz habe ich hier kein symmetrisches Fenster untersucht, sondern nur die nachfolgenden Wörter betrachtet, das rechte, gerichtete Kontextfenster. Die Auswahl der Größe des Fensters ist ebenfalls relevant und führt zu signifikanten Unterschieden.
+\textbf{Fensterkookkurrenzen} sind diejenigen Wörter, mit denen das Fokuswort innerhalb eines Fensters von festgelegter Größe gemeinsam auftritt. In Abgrenzung zur Satzkookkurrenz habe ich hier kein symmetrisches Fenster untersucht, sondern nur die nachfolgenden Wörter betrachtet, das rechte, gerichtete Kontextfenster. Die Auswahl der Größe des Fensters ist ebenfalls relevant und führt zu signifikanten Unterschieden. Der Featurevektor des Fokusworts besteht also aus der Kookkurrenz mit allen anderen Worten des Korpus.
 
-Der Featurevektor des Fokusworts besteht also aus der Kookkurrenz mit allen anderen Worten des Korpus.
-
-\textbf{Beispiel.} Der Beispieltext
+\noindent Der Beispieltext
 \begin{quote}
     The optional plotz says to frobnicate the bizbaz first. Return a foobang.
 \end{quote}
@@ -176,8 +188,6 @@ soll analysiert werden mit \emph{plotz} als Fokuswort\footnote{Stopwords wurden 
 \end{table}
 
 Die Werte $k_1$ bis $k_8$ sind die Ausprägungen der Relation zwischen den jeweiligen Wörtern. Die Ausprägung hängt davon ab, (i) ob Satzkookkurrenz oder Fensterkookkurrenz verwendet wird und (ii) welches Maß zur Berechnung der Kookkurrenz verwendet wird. Die verschiedenen Maße, die ich verwende, werden in Abschnitt \ref{coocmeasures} vorgestellt.
-
-Paradigmatischer vs. Syntagmatischer Kontext
 
 \subsection{Score 2: Anzahl der Kookkurenzen} \label{nzds}
 
@@ -258,11 +268,11 @@ Für eine detailliertere Beschreibung inklusive Berechnung des erwarteten Werts 
 
 \subsection{Distanzmaße im Vektorraum}
 
-Um die Unterschiede der Featurevektoren im Word Space Model zu berechnen, habe ich unterschiedliche Distanzmaße verwendet.
+Um die Unterschiede der Featurevektoren im Word Space Model zu berechnen, habe ich wenige unterschiedliche Distanzmaße verwendet. In der Literatur finden sich unzählige, einen guten Überblick liefert \citet{cha2007comprehensive}.
 
-\subsubsection{Standarisierte Euklidische Distanz} \label{eucl}
+\subsubsection{standardisierte Euklidische Distanz} \label{eucl}
 
-Die normale euklidische Distanz ist ein gutes erstes Maß für die Distanz. Allerdings wird hier jede Dimension des Raumes gleich gewichtet. Gibt es eine sehr große Varianz in dieser einen Dimension, so hat diese Dimension eine unverhältnismäßig große Auswirkung auf die Gesamtdistanz. Das ist z.B. der Fall, wenn physikalische Eigenschaft unterschiedlicher Einheiten in einem Featurevektor zusammengefasst werden. Das ist im Kookkurrenzraum zwar nicht der Fall, trotzdem können so einzelne sehr große Unterschiede unverhältnismäßig viel Ausschlag geben. Um diesen Effekt zu mindern, kann das Maß standarisiert werden. Dazu wird mit der reziproken Varianz des jeweiligen Features multipliziert.
+Die normale euklidische Distanz ist ein gutes erstes Maß für die Distanz. Allerdings wird hier jede Dimension des Raumes gleich gewichtet. Gibt es eine sehr große Varianz in dieser einen Dimension, so hat diese Dimension eine unverhältnismäßig große Auswirkung auf die Gesamtdistanz. Das ist z.B. der Fall, wenn physikalische Eigenschaft unterschiedlicher Einheiten in einem Featurevektor zusammengefasst werden. Das ist im Kookkurrenzraum zwar nicht der Fall, trotzdem können so einzelne sehr große Unterschiede unverhältnismäßig viel Ausschlag geben. Um diesen Effekt zu mindern, kann das Maß standardisiert werden. Dazu wird mit der reziproken Varianz des jeweiligen Features multipliziert.
 
 Seien $u$ und $v$ die Featurevektoren der Worte $w_i$ und $w_j$, $u_k$ der $k$-te Wert des Featurevektors $u$. Dann ist die \textbf{Standardized Euclidean Distance}
 $$
@@ -298,7 +308,7 @@ Der Featurevektor des Fokuswortes beschreibt, mit welchen anderen Worten das Fok
     \label{kontext}
 \end{figure}
 
-Ein geeignetes Maß für die Kompaktheit des Kontextes zu finden, ist also entscheidend. Hierbei lässt sich ausnutzen, dass die Menge an Featurevektoren, die über den Kontext eines Wortes festgelegt wird, die Form eines \emph{Clusters} annimmt. In der Literatur finden sich einige Ansätze zur Evaluierung von verschiedenen Clusteralgorithmen (Zitat Zitat Zitat). Für dieses Problem sind besonders Maße für die Kompaktheit eines einzelnen Clusters interessant, ohne dabei andere Cluster zu berücksichtigen. Ich möchte also für zwei zu vergleichende Wörter nicht wissen, wie gut ihre Kontexe in Cluster aufgeteilt wurden oder wie sehr die Cluster überlappen (obwohl das sicher auch einige interessante Informationen über die statistischen Eigenschaften der Kontexte liefern würde), sondern evaluieren, wie dicht oder kompakt die jeweiligen Cluster sind. Das Maß soll dann möglichst vom verwendeten Featureraum abstrahieren und die Kompaktheit von Clustern über verschiedenen Vektorräume miteinander vergleichbar machen.
+Ein geeignetes Maß für die Kompaktheit des Kontextes zu finden, ist also entscheidend. Hierbei lässt sich ausnutzen, dass die Menge an Featurevektoren, die über den Kontext eines Wortes festgelegt wird, die Form eines \emph{Clusters} annimmt. In der Literatur finden sich einige Ansätze zur Evaluierung von verschiedenen Clusteralgorithmen (\citet{dunn1974}, \citet{Halkidi2001}, ) Für dieses Problem sind besonders Maße für die Kompaktheit eines einzelnen Clusters interessant, ohne dabei andere Cluster zu berücksichtigen. Ich möchte also für zwei zu vergleichende Wörter nicht wissen, wie gut ihre Kontexe in Cluster aufgeteilt wurden oder wie sehr die Cluster überlappen (obwohl das sicher auch einige interessante Informationen über die statistischen Eigenschaften der Kontexte liefern würde), sondern evaluieren, wie dicht oder kompakt die jeweiligen Cluster sind. Das Maß soll dann möglichst vom verwendeten Featureraum abstrahieren und die Kompaktheit von Clustern über verschiedenen Vektorräume miteinander vergleichbar machen.
 
 Ein Konzept, das aus der Clusterevaluierung nutzbar gemacht werden kann, ist der \emph{Centroid} bzw. geometrische Schwerpunkt, der den Mittelpunkt aller Featurevektoren repräsentiert. Wie weit sind die einzelnen Featurevektoren vom Schwerpunkt entfernt? Hohe Distanz lässt auf eine weite Streuung schließen, niedrige Distanz auf Kompaktheit. Um das Maß nicht allzusehr zu verkomplizieren, habe ich zur Bestimmung der Verteilung der Distanz der einzelnen Featurevektoren zum Schwerpunkt den Durschnitt aller Distanzen gewählt.
 
@@ -331,13 +341,12 @@ Ein Ziel dieses Maßes ist es, das Resultat unabhängiger vom verwendeten Korpus
 
 \subsection{Textgrundlage}
 
-Welche Korpora werden verwendet?
+Ich habe für dieses Experiment den Brown Corpus \citep{francis1979brown} verwendet, der eine repräsentative Momentaufnahme des englischen geschriebenen Sprachgebrauchs aus den 1960er Jahren mit etwa einer Millionen Token darstellt.
 
-Wie sieht das Präprozessieren aus?
+Die Wörter werden dabei allein durch lexikalische Erscheinungsform analysiert, es fand der Einfachheit halber \emph{keine} Bigram-Analyse statt. Die Wörter wurden dabei mittels Porter-Stemmer Algorithmus \citep{Porter:1997:ASS:275537.275705} auf ihre Grundform reduziert. Anschließend wurden die Wörter über diese lexikalische Grundform identifiziert.
 
-Keine Bigramme.
+Zusätzlich habe ich Wörter, die weniger als zehn Mal im Korpus auftraten, von der Analyse ausgeschlossen, um zumindest etwas die Aussagekraft der statistischen Eigenschaften sicher zu stellen.
 
-Frequency Threshold.
 \subsection{Getestete Maße}
 
 Im Experiment habe ich die vorgestellten Maße miteinander kombiniert. Maße mit einigermaßen akzeptablen Resultaten möchte ich hier vorstellen. Zur Referenz hier alle relevanten getesteten Maße zur semantischen Spezifität. In der letzten Spalte der Tabelle steht die maximal erreichte Präzision. Für eine genaue Beschreibung siehe Abschnitt \ref{aufbau}.
@@ -350,16 +359,16 @@ Im Experiment habe ich die vorgestellten Maße miteinander kombiniert. Maße mit
     \item Chi Square (Abschnitt \ref{chi})
 \end{itemize}
 
-\textbf{Maße zur semantischen Spezifität (Scores)}:
+\noindent\textbf{Maße zur semantischen Spezifität (Scores)}:
 \begin{itemize}
     \item Document Frequency (df, Abschnitt \ref{df})
     \item Non-Zero Dimensions (nzd, Abschnitt \ref{nzds})
     \item Mean Distance to Centroid (mdc, Abschnitt \ref{mdcs})
 \end{itemize}
 
-\textbf{Distanzmaße}:
+\noindent\textbf{Distanzmaße}:
 \begin{itemize}
-    \item Standarisierte Euklidische Distanz  (Abschnitt \ref{eucl})
+    \item standardisierte Euklidische Distanz  (Abschnitt \ref{eucl})
     \item Kosinusdistanz (Abschnitt \ref{cosi})
 \end{itemize}
 
@@ -423,7 +432,7 @@ Der ndzs performt dabei weitesgehend vergleichbar mit dem dfs, mit kleineren Sch
 
 \subsubsection {Satzkontext}
 
-Die Ergebnisse der Analyse nach Satzkontext ist ernüchternd (siehe Abbildung \ref{sent}). Weder nzds noch mcds mit Kosinusmaß und standarisierter euklidischer Distanz erreichen die Präzisionswerte des Vergleichswert document frequency. Lediglich der Rückschritt auf einfache euklidische Distanz kann an die Vergleichswerte heranreichen. Dann jedoch gibt man die Vergleichbarkeit über verschiedene Vektorräume auf.
+Die Ergebnisse der Analyse nach Satzkontext ist ernüchternd (siehe Abbildung \ref{sent}). Weder nzds noch mcds mit Kosinusmaß und standardisierter euklidischer Distanz erreichen die Präzisionswerte des Vergleichswert document frequency. Lediglich der Rückschritt auf einfache euklidische Distanz kann an die Vergleichswerte heranreichen. Dann jedoch gibt man die Vergleichbarkeit über verschiedene Vektorräume auf.
 
 
 \subsubsection{Fensterkontext, Binäres}
@@ -453,7 +462,10 @@ Die Anwendung der vorgestellten performanten Maße auf vergleichende Anglizismen
 \subsection{Textgrundlage}
 
 Um eine vergleichbare Textgrundlage im Deutschen wie Englischen zu verwenden, habe ich im Englischen auf den Reuters Corpus \citep{Lewis:2004:RNB:1005332.1005345} zurückgegriffen. Der Korpus umfasst in der verwendeten Version etwa 11.000 Nachrichtenartikel aus den späten 90ern.
+
 Im Deutschen habe ich den Tiger Korpus \citep{Brants2004} verwendet, der eine vergleichbare Textmenge von Artikeln aus der Frankfurter Rundschau enthält.
+
+Die verwendete Tokenisierung und das Stemming entspricht dem vorhergehenden Experiment. Die verwendete Liste von Anglizismen findet sich im Anhang.
 
 \subsection{Resultate}
 
@@ -461,15 +473,19 @@ Im Deutschen habe ich den Tiger Korpus \citep{Brants2004} verwendet, der eine ve
 
 \section{Caveats und Ausblick} \label{ausblick}
 
-Die vorgestellten Maße beschränken sich weitesgehend auf die reine statistische Verteilung. Es wäre bestimmt interessant, zusätzlich auch probabilistische Berechnungen zu verwenden..
+Ein großer Vorteil der vorgestellten Maße ist, dass sie völlig generell, nicht themenbezogen und ohne Trainingsdaten auskommen. Andere Verfahren, etwa über Klassifizierer, könnten allerdings performanter sein.
 
 Stillschweigend habe ich hier vorausgesetzt, dass die getesteten Maße auch in anderen Kontexten und Sprachen (etwa im Deutschen) greifen. Das habe ich zwar grob getestet, aber keinem rigorosen Text unterzogen. Diese Hilfshypothesen erfordern eigentlich auch noch einiges an experimenteller Bestätigung.
 
- Die hier vorgestellte Methode und das anschließende Experiment beinhalten einige vereinfachende Vorannahmen, die das Endergebnis negativ beeinflussen. Ein großer Faktor ist sicher, dass Wörter allein aufgrund ihrer lexikalischen Form identifiziert wurden. Es ist natürlich bekannt, dass gleiche lexikalische Formen unterschiedliche Bedeutungen tragen können, also ambig sind. Das hat direkten Einfluss auf den Featurevektor des Wortes - so werden auch alle Kookkurrenzen dazugezählt, die eigentlich einer anderen Wortbedeutung zugerechnet werden sollen. Abhilfe kann hier eine Word Sense Disambiguation schaffen, bei der entweder in der Präprozessierung oder bereits vorher, mittels eines annotierten Korpus, die verschiedenen Wortbedeutungen auseinandergehalten werden.
+Die hier vorgestellte Methode und das anschließende Experiment beinhalten einige vereinfachende Vorannahmen, die das Endergebnis negativ beeinflussen. Ein großer Faktor ist sicher, dass Wörter allein aufgrund ihrer lexikalischen Form identifiziert wurden. Es ist natürlich bekannt, dass gleiche lexikalische Formen unterschiedliche Bedeutungen tragen können, also ambig sind. Das hat direkten Einfluss auf den Featurevektor des Wortes - so werden auch alle Kookkurrenzen dazugezählt, die eigentlich einer anderen Wortbedeutung zugerechnet werden sollen. Abhilfe kann hier eine Word Sense Disambiguation schaffen, bei der entweder in der Präprozessierung oder bereits vorher, mittels eines annotierten Korpus, die verschiedenen Wortbedeutungen auseinandergehalten werden.
 
- Auch wurde keinerlei unterscheidung gemacht hinsichtlich der Art des untersuchten Wortes und seiner Beziehung zu den umliegenden Wörtern, außer die direkte lexikalische Nachbarschaft. So wurden z.B. nicht Nomen untersucht und der Kontext aus Verben gebildet, die in direkter Subject-Prädikat-Relation stehen. Eine solche tiefergehende Analyse könnte u.U. dazu beitragen, die Erkennung von semantischer Spezifität zu präzisieren.
+Auch wurde keinerlei unterscheidung gemacht hinsichtlich der Art des untersuchten Wortes und seiner Beziehung zu den umliegenden Wörtern, außer die direkte lexikalische Nachbarschaft. So wurden z.B. nicht Nomen untersucht und der Kontext aus Verben gebildet, die in direkter Subject-Prädikat-Relation stehen. Eine solche tiefergehende Analyse könnte u.U. dazu beitragen, die Erkennung von semantischer Spezifität zu präzisieren.
 
 Die Auswertung der Resultate ist in der vorliegenden Form eher simplistisch. So wird einfach nur verglichen, welches Maß den höheren Wert berechnet hat und dann auf höhere / niedrigere semantische Sppezifität geschlossen. Was eigentlich gewünscht ist, wäre eine statistisch zuverlässige Aussage. Die Entscheidung über die Spezifität sollte mit einer gewissen Sicherheit erfolgen. Um das zu erreichen, müsste man zunächst über zufällig ausgewählte Samples aus dem Korpus eine generelle Verteilung der Differenzen der Spezifitätsmaße von Wortpaaren berechnen. Auf dieser Grundlage ließe sich die Standardabweichung der Differenz berechnen. Unter der Zusatzannahme, dass diese Differenz normalverteilt ist (was sich auch prüfen ließe), kann dann die statistische Signifikanz der Differenz der Maße eines Wortpaares berechnet werden, dessen semantische Spezifität man untersuchen will. So könnte dann etwa erst ab einem bestimmten Schwellenwert mit großer Sicherheit davon gesprochen werden, ob sich hier semantische Spezifität stark unterscheidet. Aber gleichzeitig wird auch die Präzision der Antwort erhöht, bei unzureichender Ausprägung enthält sich das Maß dann einer Wertung.
+
+Hat man auf diese Weise ein Maß für die Zuversicht in die Einschätzung des Maßes gefunden, lassen sich auch mehrere performante Scores aggregieren und so in einem Hybrid-Verfahren eine noch höhere Performanz erreichen. So kann bei widerstreitenden Ergebnissesn zweier Maße dasjenige Maß mit der höheren Zuversicht entscheiden. Durch diese Aggregation entsteht dann ein neues, noch zuverlässigeres Verfahren.
+
+
 
 \section{Anhang}
 
@@ -510,6 +526,17 @@ Die Auswertung der Resultate ist in der vorliegenden Form eher simplistisch. So 
 Airline, Babysitter, Bachelor, Bar, Basketball, Beach, Beat, Bestseller, Bits, Blackout, Blues, Bodybuilder, Boom, Boss, Box, Boys, Braindrain, Browser, Camper, Campus, Champion, clever, Coach, Cola, Comedy, Container, cool, Copyright, Date, Deal, Design, Drinks, Foul, Freak, Gameshow, Gangster, Hattrick, Hit, Hooligans, Image, Insider, Internet, Jazz, Keeper, Kids, Leasing, Lifestyle, Lobby, mail, Manager, Marketing, Meeting, model, Performance, Pixel, Poker, Pool, Punk, Quiz, Radar, Rapper, Scanner, Service, shop, Skateboard, Soccer, Sponsor, Stalker, Star, Start-up, Stewardess, Striptease, Surfer, super, Test, Training, Tricks, unfair, Website, Yacht, Yankee
 
 \subsection{Verwendete Technologien}
+
+Das Experiment wurde komplett in \texttt{python 3.5.2} umgesetzt.
+
+Den Zugang zu den Korpora habe ich mittels der Python-Bibliothek \texttt{nltk} realisiert. Auch die verwendeten Tokenisierer und Stemmer entstammen dieser Bibliothek. Die Berechnung der verschiedenen Kookkurrenzmaße erfolgten mit dieser Bibliothek.
+
+Mathematische maschinennahe Berechnungen insbesondere für Matrizen habe ich mittels der Python-Bibliotheken 
+\texttt{numpy} und \texttt{scipy} umgesetzt. Besonders bei der Berechnung der verschiedenen Distanzmaße waren diese Bibliotheken hilfreich.
+
+Der Programmcode ist unter MIT License zugänglich unter \\ \texttt{https://github.com/conradfriedrich/termspec}.
+
+
 
 \nocite{han2011}
 \nocite{heyer2008}
