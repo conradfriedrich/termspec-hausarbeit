@@ -78,44 +78,52 @@ ItalicFont = OldStandard-Italic.otf]
 
 \abstract{Ladida, ladidu}
 
-
 \thispagestyle{empty}
 \end{titlepage}
-
-
 
 \tableofcontents
 \newpage
 
 \section{Einleitung}
 
-Weeds et al. (2004) proposed a notion of distributional generality, observing that more general words tend to occur in a larger variety of contexts than more specific words. For example, we would expect to be able to replace any occurrence of cat with animal and so all of the contexts of cat must be plausible
-contexts for animal. However, not all of the contexts of animal would be plausible for cat, e.g., “the monstrous animal barked at the intruder”.
+In dieser Arbeit verfolge ich zwei Ziele: Zum einen suche ich ein Maß für die semantische Spezifität von Begriffen. Dazu entwerfe ich, ausgehend von einigen Hypothesen, verschiedene Maße und teste diese dann mit Hilfe von Korpora und einem Testsatz von Wortpaaren. Zum anderen wende ich die so erprobten Maße auf die Fragestellung an, wie sich Anglizismen im Deutschen hinsichtlich ihrer semantischen Spezifität von ihren englischen Ursprungswörtern unterschieden. In Kapitel 2 und 3 beschäftige ich mich mit dem ersten Ziel, die Anwendung erfolgt in Kapitel 4.
+
+Ausgehend von folgenden drei Thesen stelle ich drei Maße für die semantische Spezifität vor:
+\begin{enumerate}
+    \item Semantisch spezifischere Wörter treten seltener auf.
+    \item Semantisch spezifischere Wörter stehen mit weniger verschiedenen Wörtern im Kontext
+    \item Semantisch spezifischere Wörter haben einen Kontext, der sich semantisch ähnlicher ist.
+\end{enumerate}
+
+These 1 tritt in dieser Arbeit in Form des Document Frequency Score auf (siehe Abschnitt \ref{df}), These 2 in Form des Non-Zero Dimensions Score (Abschnitt \ref{nzds}) und These 3 in Form des Mean Distance to Centroid Score (Abschnit \ref{mdcs}).
+
+Die verwendeten Maße sind dabei statistische Maße, also Maße, die irgendetwas mit Zählen zu tun haben \citep[]{manning1999}. Konkreter: Maße, die sich auf die Anzahl bestimmter Eigenschaften von Wörtern in Textmengen beziehen. Welche Berechnungen man anschließend mit den gezählten Werten anstellt, legt das mathematische Modell der Arbeit fest. Ich werde dazu das Word Space Model verwenden, das in Abschnitt \ref{wsm} vorgestellt wird.
 
 \subsection*{Semantische Spezifität}
-
-Was ist die Challenge des Experiments?
-
-\citet[11]{sparckjones1972} Beschreibt die Spezifität eines Begriffes so:
+Was ist eigentlich semantische Spezifität? \citet[11]{sparckjones1972} Beschreibt die Spezifität eines Begriffes so:
 \begin{quote}
   Specificity ... is a semantic property of index terms: a term is more or less specific as its meaning is more or less detailed and precise.
 \end{quote}
 
+Ein Wort ist also eine spezifischere Bedeutung, wenn es konkreter, detaillierter oder präziser ist. Ich denke, dass man so schnell ein intuitives verständnis davon hat, was mit semantischer Spezifität gemeint ist. Anders formuliert könnte man auch sagen, dass ein Wort spezifischer ist, wenn es sich auf weniger Situationen anwenden lässt. Es schließt mehr Sachverhalte von vornherein aus. Bezogen etwa auf die Tierwelt sind spezifischere Bezeichnungen diejenigen mit der geringeren Extension: Mit 'Säugetier' kann man abertausende verschiedenste Tiere bezeichnen, mit 'Europäischer Feldhamster' muss ich schon einige sehr spezielle Tiere raussuchen, die ich korrekt damit bezeichne.
+
+
+
+Weeds et al. (2004) proposed a notion of distributional generality, observing that more general words tend to occur in a larger variety of contexts than more specific words. For example, we would expect to be able to replace any occurrence of cat with animal and so all of the contexts of cat must be plausible
+contexts for animal. However, not all of the contexts of animal would be plausible for cat, e.g., “the monstrous animal barked at the intruder”.
 \subsection*{Semantische Spezifität und Anglizismen}
 
+% \newpage
 \section{Ein Maß für die semantische Spezifität}
 
-\subsection{Textgrundlage}
+Was ist die Challenge des Experiments?
 
-Welche Korpora werden verwendet?
+Für die Auswahl eines passendes Word Space Models gibt es verschiedene Optionen. Naheliegend ist etwa eine Dokument-Wort-Matrix, in der für jedes Dokument des Korpus angegeben wird, wie häufig jedes analysierte Wort des KOrpus darin auftritt. Eine solche vollständige Matrix ist eine Darstellung des sogenannten Dokumentenraums (\emph{Document Space})\citep[S.296]{manning1999}. Ebenfalls naheliegend ist eine Wort-Wort-Matrix, die die Relationen der Wörter im Korpus untereinander einzufangen versucht. Sie stellt den sogenannten Wortraum dar (\emph{Word Space}). Ich werde mich ihn dieser Arbeit statt auf den Dokumentenraum auf Methoden aus dem Wortraum stützen. \citet{Schutze:1994:CTT:2856823.2856847} argumentieren dafür, dass sowohl quantitativ als auch qualitativ reichhaltigere semantische Informationen auf Basis des Word Space Models gewonnen werden können.
 
-Wie sieht das Präprozessieren aus?
+Wie die Relationen zwischen Wörtern aussehen können und wie man mit ihnen eine Näherung der semantischen Spezifität berechnen kann, möchte ich in diesem Kapitel vorstellen. Dazu entwickele ich verschiedene Berechnungsmethoden und kombiniere diese erst einmal ohne starke theoretische Vorannahmen. Dann stelle ich ein Experiment vor, dass die Berechnungsmethoden auf ihre Tauglichkeit zur Berechnung der semantischen Spezifität prüft. Die vielversprechensten Methoden wende ich dann im anschließenden Kapitel auf die Fragestellung der semantischen Spezifität von Anglizismen an.
 
-Keine Bigramme.
 
-Frequency Threshold.
-
-\subsection{Score \#1: Document Frequency}
+\subsection{Score 1: Document Frequency} \label{df}
 Bereits \citet{sparckjones1972} schlug ein statistisches Maß für die semantische Spezifität eines Wortes vor. Es ist die simple Frequenz, mit der ein Wort im Korpus auftaucht, das ein Indiz für die Spezifität darstellen soll. \citet{Caraballo99determiningthe} konnten die \emph{document frequency} als Eigenschaft von Worten dazu nutzen, für beliebige Wortpaare festzustellen, welches Wort  spezifischer oder genereller ist. Überprüft wurde das mit Beispielwortpaaren, die in einer Hyperonym- bzw. Hyponymrelation zueinander stehen: Das Wort \emph{Getränk} ist ein Oberbegriff zum Wort \emph{Cola}. Für diese Art von Relation gilt: Wenn ein Wort ein Oberbegriff eines anderen ist, so ist der Unterbegriff semantisch spezifischer als der Oberbegriff. Die klar unterschiedene Spezifität ist also eine notwendige Bedingung für die Hyperonym- bzw. Hyponymrelation. Das macht solche Wortpaare zu natürlichen Kandidaten, um Maße für semantische Spezifität zu testen.
 
 Insoweit es die Textgrundlage hergibt, also in Dokumenten geordnet ist, verwende ich die \emph{document frequency} als erste Annäherung an ein brauchbares Maß für die semantische Spezifität. Die Berechnung ist simpel und performant. Entscheidend wird die Frage sein, ob es den komplexeren Modellen gelingt, eine höhere Erfolgsrate zu erzielen. Daher verwende ich die \emph{document frequency} als Benchmark für die anderen Modelle.
@@ -131,7 +139,7 @@ Sei $N$ die Gesamtzahl aller untersuchen Dokumente und $df_i$ die Anzahl der Dok
 
 Hat von zwei Wörtern, die wir miteinander vergleichen wollen das erste eine kleinere $dfn$ als das zweite, ist das nach \citet{Caraballo99determiningthe} eine gute Heuristik, auch eine höhere semantische Spezifität anzunehmen.
 
-\subsection{Das Word Space Model}
+\subsection{Das Word Space Model}\label{wsm}
 Grundlage dieser Arbeit ist das \emph{Word Space Model} (WSM) oder auch Termvektormodell, das unter anderem sehr ausführlich in \citet{sahlgren2006word} beschrieben wird. Das WSM erhält seine Relevanz in der Computerlinguistik hauptsächlich durch eine zentrale Überlegung:
 \begin{quote}
     \textbf{The distributional hypothesis:} \emph{words with similar distributional properties have similar meanings.}
@@ -171,7 +179,7 @@ Die Werte $k_1$ bis $k_8$ sind die Ausprägungen der Relation zwischen den jewei
 
 Paradigmatischer vs. Syntagmatischer Kontext
 
-\subsection{Score \#2: Anzahl der Kookkurenzen}
+\subsection{Score 2: Anzahl der Kookkurenzen} \label{nzds}
 
 Ausgehend vom vorherigen Abschnitt lässt sich eine Wort-Wort-Kookkurrenzmatrix erstellen. Diese Matrix enthält alle Featurevektoren jedes einzelnen Wortes des Korpus als Reihe. Die Matrix ist dabei zwingend quadratisch, aber nicht unbedingt symmetrisch, eben im Falle der Fensterkookkurrenzen.
 
@@ -192,11 +200,10 @@ Meine These: Ein kleiner $nzds$-Wert eines Wortes spricht für eine höhere sema
 
 Zusätzlich zur Auswahl der Art der Kookkurrenz muss noch ein Maß zur Bestimmung der Kookkurrenz gewählt werden. In dieser Arbeit habe ich dafür vier verschiedene Maße herangezogen. Ich gebe hier die Maße für den Fall der Fensterkookkurenzen an. Für die Satzkookkurrenzen ergeben sich leicht andere Maße, auch weil die resultierende Matrix symmetrisch ist. Bei direktionalen Kontextfenstern gilt das nicht notwendigerweise (und praktisch fast nie). Daher ist bei jedem Maß zu beachten: score$_{ij}$ ist nicht zwingend gleich score$_{ji}$.
 
-\subsubsection{Binäre Kookkurrenz}
+\subsubsection{Binäre Kookkurrenz} \label{bin}
 
 Die binäre Kookkurrenz zeigt an, ob ein Wort mit einem anderen Wort im gesamten Kontext mindestens mit einer bestimmten Frequenz in Kookkurrenz steht.
 
-\begin{defi}
 Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, und $m$ die Mindestanzahl an Kookkurrenzen. Dann ist die \textbf{binäre Kookkurrenz}
 
 \begin{equation*}
@@ -206,33 +213,28 @@ Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $
         0 & \text{Falls nicht.}\\
    \end{cases}
 \end{equation*}
-\end{defi}
 
 Es wäre also $bin_{ij}$ gleich $1$ genau dann wenn $w_j$ in mindestens $m$ Kontextfenstern von $w_i$ auftritt. 
 
-\subsubsection{Frequenz der Kookkurrenz}
+\subsubsection{Frequenz der Kookkurrenz} \label{freq}
 
 Die Frequenz der Kookkurrenz zählt jedes Auftreten der Kookkurenzen \footnote{Eigentlich bezeichnet  'Frequenz' die relative Häufigkeit. Da aber in der Literatur 'Document Frequency' häufig als Anzahl der Dokumente verstanden wird und ich den Term hier auch so benutze, nenne ich der Konsistenz halber diesen Wert auch Frequenz. }.
 
-\begin{defi}
 Sei $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt, wobei $|X|$ die Kardinalzahl der Menge $X$ bezeichnet. Dann ist die \textbf{Frequenz}
 \begin{equation*}
    freq_{ij} = |K_{ij}|.
 \end{equation*}
-\end{defi}
 
-\subsubsection{Dice-Koeffizient}
+\subsubsection{Dice-Koeffizient} \label{dice}
 
 Der Dice-Koeffizient zieht auch in Betracht, wie häufig die Worte im Korpus generall auftreten. Ein sehr häufiges Wort etwa steht mit vielen anderen Wörtern in Kookkurrenz, ohne dass dieses Auftreten besonders signifikant sein müsste. Der Dice-Koeffizient „bestraft“ solche Wörter, indem durch die Gesamtzahl der Vorkommnisse geteilt wird \citep[S. 299]{manning1999}.
 
-\begin{defi}
 Seien $K_{ij}$ die Menge aller Kontextfenster für Wort $w_i$, in denen das Wort $w_j$ auftritt und $K_{i}$ und $K_{j}$ die Mengen aller Kontextfenster, in denen die Wörter $w_i$ resp. $w_j$ auftreten. Dann ist der \textbf{Dice-Koeffizient}
 \begin{equation*}
    dice_{ij} = \frac{2 |K_{i} \cap K_{j}| }{|K_{i}| + |K_{j}|}.
 \end{equation*}
-\end{defi}
 
-\subsubsection{Chi-Square}
+\subsubsection{Chi-Square} \label{chi}
 
 Pearson's Chi-Square-Test ist etwas elaborierter. Er stellt ebenfalls ein Maß für die Signifikanz der Kookkurrenz zur Verfügung, indem er das tatsächlich beobachtete Auftreten von Kookkurrenzen dem statistisch Erwartbaren gegenüberstellt. Statistisch erwartbar bedeutet dabei die rein zufällige Häufigkeit des gemeinsamen Auftretens in Kookkurrenz, wenn beide Worte unabhängig voneinander wären, d.h. kein Zusammenhang zwischen ihnen bestünde. Der Chi-Square-Wert steigt, je signifikanter die Kookkurrenz.
 
@@ -247,44 +249,36 @@ Zur Berechnung wird zunächst eine Kontigenztabelle erstellt:
     \end{center}
 \end{table}
 
-\begin{defi}
-Sei K die Kontingenztabelle zweier Wörter $w_i$ und $w_j$, $O_{k,l}$ der Wert der Kontingenztafel in Zelle $k,l$ und $E_{k,l}$ der erwartete Wert für Zelle $k,l$, dann ist der \textbf{Chi-Square-Wert}
+Sei $T$ die Kontingenztabelle zweier Wörter $w_i$ und $w_j$, $O_{k,l}$ der Wert der Kontingenztafel in Zelle $k,l$ und $E_{k,l}$ der erwartete Wert für Zelle $k,l$, dann ist der \textbf{Chi-Square-Wert}
 \begin{equation*}
    chi_{ij} = \sum_{k,l} { \frac{ (O_{k,l} - E_{k,l})^2} {E_{k,l}}  }.
 \end{equation*}
-\end{defi}
 
 Für eine detailliertere Beschreibung inklusive Berechnung des erwarteten Werts siehe \citet[S. 169ff.]{manning1999}.
 
-\subsection{Distanzmaße im Vektorraum (fast unnötig)}
+\subsection{Distanzmaße im Vektorraum}
 
 Um die Unterschiede der Featurevektoren im Word Space Model zu berechnen, habe ich unterschiedliche Distanzmaße verwendet.
 
-\subsection{Standardized Euclidean Distanz}
+\subsubsection{Standarisierte Euklidische Distanz} \label{eucl}
 
 Die normale euklidische Distanz ist ein gutes erstes Maß für die Distanz. Allerdings wird hier jede Dimension des Raumes gleich gewichtet. Gibt es eine sehr große Varianz in dieser einen Dimension, so hat diese Dimension eine unverhältnismäßig große Auswirkung auf die Gesamtdistanz. Das ist z.B. der Fall, wenn physikalische Eigenschaft unterschiedlicher Einheiten in einem Featurevektor zusammengefasst werden. Das ist im Kookkurrenzraum zwar nicht der Fall, trotzdem können so einzelne sehr große Unterschiede unverhältnismäßig viel Ausschlag geben. Um diesen Effekt zu mindern, kann das Maß standarisiert werden. Dazu wird mit der reziproken Varianz des jeweiligen Features multipliziert.
 
-\begin{defi}
 Seien $u$ und $v$ die Featurevektoren der Worte $w_i$ und $w_j$, $u_k$ der $k$-te Wert des Featurevektors $u$. Dann ist die \textbf{Standardized Euclidean Distance}
 $$
     se(x_i, x_j) = \sqrt{ \sum_{k} {\frac{1}{V_i}{ (u_k - v_k)^2 }} }.
 $$
 
-\end{defi}
-
-\subsection{Kosinusdistanz}
+\subsubsection{Kosinusdistanz} \label{cosi}
 
 Die Kosinusdistanz liefert ein bereits normalisiertes Maß dafür, wie stark zwei Vektoren korrellieren \citep[S. 300]{manning1999}. Sie verhält sich analog zur euklidischen Distanz für normalisierte Vektoren. Zu beachten ist, dass oben die \emph{Standardized}, nicht die normalisierte euklidische Distanz beschrieben wird.
 
-\begin{defi}
 Seien $u$ und $v$ die Featurevektoren der Worte $w_i$ und $w_j$, wobei $u \cdot v$ das Skalarprodukt von $u$ und $v$ bezeichnet und $|x|$ die Länge eines Vektors $x$. Dann ist die \textbf{Kosinusdistanz}
 $$
     cos(x_i, x_j) = \frac{u \cdot v}{|u||v|}.
 $$
-\end{defi}
 
-
-\subsection{Score \#3: Semantische Nähe des Kontextes}
+\subsection{Score 3: Semantische Nähe des Kontextes} \label{mdcs}
 
 Welche Informationen über semantische Sepzifität lassen sich nun aus der so gewonnenen Wort-Wort-Kookkurrenzmatrix gewinnen? Ein naheliegender Ansatz wäre es, die Distanz zwischen den Featurevektoren derjenigen Wörter zu berechnen, die wir vergleichen wollen. Das Resultät wäre eine einzige Zahl, die Auskunft über die semantische Nähe beider Wörter gibt. Daraus lässt sich jedoch nicht auf die semantische Spezifität schließen. Ist die Distanz hinreichend klein, so haben die Wörter anscheinend ähnlichen semantischen Gehalt, ist die Distanz sehr groß, unterscheiden sie sich. Welches der Wörter ist aber nun das semantisch spezifischere?
 
@@ -321,8 +315,7 @@ Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wo
 Die Menge der Wörter des Kontextes werden bei diesem Maß durch jeden von Null verschiedenen Wert im Featurevektor des Fokuswortes bestimmt. Um dem Umstand Rechnung zu tragen, dass die Kookkurrenz des Fokuswortes mit jedem Wort des Kontextes unterschiedlich ausgeprägt ist, verwende ich zusätzlich ein abgewandeltes Maß, das den kompletten Featurevektor des Kontextwortes mit der Ausprägung des zugehörigen Eintrags im Featurevektor des Fokuswortes skaliert.
 
 \begin{defi}
-Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wort $w_i$ in einer Kontextrelation steht (s.o.), $c_i$ der geometrische Schwerpunkt von $X_i$ und $a_{ij}$ der Eintrag des Featurevektors von Wort $w_i$ von Kontextwort $w_j$. Dann ist der \textbf{Scaled Mean Distance to Centroid Score} $sca_mdcs_i$
-
+Seien $X_i$ die Menge aller Featurevektoren derjenigen Wörter, mit denen das Wort $w_i$ in einer Kontextrelation steht (s.o.), $c_i$ der geometrische Schwerpunkt von $X_i$ und $a_{ij}$ der Eintrag des Featurevektors von Wort $w_i$ von Kontextwort $w_j$. Dann ist der \textbf{Scaled Mean Distance to Centroid Score}
 
 $$
   sca\_mdcs_i =  \frac{1}{|X_i|} \sum_{x_j \in X_i}  a_{ij} dist(x_j, c_i).
@@ -332,34 +325,191 @@ $$
 
 Damit ist $mdcs$ also nur ein Spezialfall von $sca\_mdcs$ mit $a_{ij} = 1$ für alle $i,j$.
 
-Ein Ziel dieses Maßes ist es, das Resultat unabhängiger vom verwendeten Korpus zu machen. Ein Beispiel zur Verdeutlichung: Ein Korpus enthält ein Wort mit einer bestimmten \emph{Document Frequency}. Nun werden dem Korpus eine Menge von Texten hinzugefügt, die jedoch völlig andere Themengebieten behandeln und das Fokuswort nicht enthalten. Die \emph{Document Frequency} nimmt in starkem Maße ab. Angenommen der Kontext des Wortes ist auch nicht sonderlich stark in den hinzugefügten Texten vertreten, dann steigt die \emph{Mean Distance to Centroid} nicht oder nicht signifikant. 
+Ein Ziel dieses Maßes ist es, das Resultat unabhängiger vom verwendeten Korpus zu machen. Ein Beispiel zur Verdeutlichung: Ein Korpus enthält ein Wort mit einer bestimmten \emph{Document Frequency}. Nun werden dem Korpus eine Menge von Texten hinzugefügt, die jedoch völlig andere Themengebieten behandeln und das Fokuswort nicht enthalten. Die \emph{Document Frequency} nimmt in starkem Maße ab. Angenommen der Kontext des Wortes ist auch nicht sonderlich stark in den hinzugefügten Texten vertreten, dann steigt die \emph{Mean Distance to Centroid} nicht oder nicht signifikant.
 
-\subsection{Getestete Maße}
-
-
-\subsection{Resultate}
-
-\section{Ein Modell für Anglizismen}
+\section{Semantische Spezifität: Experiment}
 
 \subsection{Textgrundlage}
 
+Welche Korpora werden verwendet?
+
+Wie sieht das Präprozessieren aus?
+
+Keine Bigramme.
+
+Frequency Threshold.
+\subsection{Getestete Maße}
+
+Im Experiment habe ich die vorgestellten Maße miteinander kombiniert. Maße mit einigermaßen akzeptablen Resultaten möchte ich hier vorstellen. Zur Referenz hier alle relevanten getesteten Maße zur semantischen Spezifität. In der letzten Spalte der Tabelle steht die maximal erreichte Präzision. Für eine genaue Beschreibung siehe Abschnitt \ref{aufbau}.
+\\\\
+\textbf{Kookkurrenzmaße}:
+\begin{itemize}
+    \item Binär (Abschnit \ref{bin})
+    \item Frequenz (Abschnitt \ref{freq})
+    \item Dice-Koeffizient (Abschnitt \ref{dice}
+    \item Chi Square (Abschnitt \ref{chi})
+\end{itemize}
+
+\textbf{Maße zur semantischen Spezifität (Scores)}:
+\begin{itemize}
+    \item Document Frequency (df, Abschnitt \ref{df})
+    \item Non-Zero Dimensions (nzd, Abschnitt \ref{nzds})
+    \item Mean Distance to Centroid (mdc, Abschnitt \ref{mdcs})
+\end{itemize}
+
+\textbf{Distanzmaße}:
+\begin{itemize}
+    \item Standarisierte Euklidische Distanz  (Abschnitt \ref{eucl})
+    \item Kosinusdistanz (Abschnitt \ref{cosi})
+\end{itemize}
+
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{ l | l | l | l | l | r}
+        Kontext   & K.-Maß    & Score         & Distanzmaß    & Slug            & Präzision \\ \hline \hline
+        -               & -                 & df            & -             & df                        & 0.79 \\
+        Satz            & -                 & nzd          & -             & sent\_nzds                 & 0.77 \\
+        Satz            & Dice              & mdc          & Kosinus       & sent\_dice\_mdcs\_cosi          & 0.80 \\
+        Satz            & Dice              & mdc          & Euklidisch    & sent\_dice\_mdcs\_eucl         & 0.80 \\
+        Satz            & Frequenz          & mdc          & Kosinus       & sent\_dice\_mdcs\_cosi          & 0.80 \\
+        Satz            & Frequenz          & mdc          & Euklidisch    & sent\_dice\_mdcs\_eucl          & 0.80 \\
+        Fenster         & -                 & nzd          & -             & win\_nzds                  & 0.80 \\
+        Fenster         & Binär             & mdc          & Kosinus       & win\_bin\_mdcs\_cosi      & \textbf{0.81} \\
+        Fenster         & Binär             & mdc          & S-Euklidisch    & win\_bin\_mdcs\_seuc      & 0.79 \\        
+        Fenster         & Frequenz          & mdc          & Kosinus       & win\_freq\_mdcs\_cosi     & \textbf{0.83} \\
+        Fenster         & Frequenz          & mdc          & S-Euklidisch    & win\_freq\_mdcs\_seuc     & 0.80 \\
+        Fenster         & Frequenz          & scaled mdc   & S-Euklidisch    & win\_freq\_sca\_mdcs\_seuc & 0.79 \\
+        Fenster         & Dice              & mdc          & Kosinus       & win\_dice\_mdcs           & \textbf{0.81} \\
+        Fenster         & Chi Square        & mdc          & Kosinus       & win\_chi\_mdcs            & \textbf{0.82}
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Aufbau des Experiments} \label{aufbau}
+
+Um die Validität der dargestellten Maße bewerten zu können, verwende ich eine Menge von Wortpaaren, bei denen offensichtlich ist, welches Wort die höhere semantische Spezifität besitzt. Sehr gute Kandidaten für diese Wortpaare sind Oberbegriffe und Unterbegriffe, also Begriffe, die andere Begriffe klassifizieren oder subsumieren. Diese Relation zwischen Begriffen impliziert, dass der Oberbegriff genereller und der Unterbegriff spezifischer ist. Eine vollständige Liste der verwendeten Wortpaare ist \citet{Caraballo99determiningthe} entnommen und findet sich im Anhang.
+
+Die verschiedenen Maße lasse ich nun zu jedem Wort der Wortpaare bestimmen und vergleiche anschließend, welchen Begriff das Maß als semantisch spezifischer einstuft. Entspricht die Einstufung der intuitiven Vorannahme, das der Unterbegriff semantisch spezifischer ist, wird das als richtige Einstufung gewertet. Die Präzision für ein Maß ist dann einfach der Anteil an geprüften Wortpaaren, den das Maß gemäß der intuitiven Vorannahme richtig einstuft.
+
+Von besonderem Interesse im Falle der Kontextfenster ist dabei die Größe des Kontextfensters. \citet[S. 68]{sahlgren2006word} findet in seinen Experimenten ein optimales Kontextfenster von der Größe 2+2, also zwei Wörter zu jeder Seite des Kontextwortes. Jedoch verweist er auch auf \citet{Miller2000-MILLRF}, die betonen, dass unser Verständnis von adequaten Kontexten noch nicht perfekt ist und man nicht von vornherein ausschließen sollte, dass sich Kontexte anders verstehen lassen, um wertvolle semantische Informationen zu gewinnen. Ausgehend von dieser Idee habe ich die Resultate als Funktion der Größe des Kontextfensters dargestellt (s. Abbildungen 3, 4 und 5.) und bin ohne theoretische Vorannahmen an diese Fragestellung herangegangen.
+
+\subsection{Resultate}
+
+\begin{figure}
+    \includegraphics[width = \textwidth]{sent}
+    \caption{Präzision der Maße mit Frequenz und Dice-Koeffizient im Satzkontext}
+    \label{sent}
+\end{figure}
+\begin{figure}
+    \includegraphics[width = \textwidth]{win_bin}
+    \caption{Präzision der Maße mit binärem Kookkurrenzmaß im Fensterkontext über Größe des Fensterkontextes}
+    \label{win_bin}
+\end{figure}
+\begin{figure}
+    \includegraphics[width = \textwidth]{win_freq}
+    \caption{Präzision der Maße mit Frequency Kookkurrenzmaß im Fensterkontext über Größe des Fensterkontextes}
+    \label{win_freq}
+\end{figure}
+\begin{figure}
+    \includegraphics[width = \textwidth]{win_dice_chi}
+    \caption{Präzision der Maße mit Dice bzw. Chi Square Kookkurrenzmaß im Fensterkontext über Größe des Fensterkontextes}
+    \label{win_dice_chi}
+\end{figure}
+Für alle Kontextfenstergrößen ist die Document Frequency offensichtlich konstant. Zum Vergleich habe ich sie als gestrichelte Linie in jedes Diagramm eingezeichnet.
+
+Der Non Zero Dimension Score ist weiterhin für jedes Kookkurrenzmaß identisch. Zum besseren Vergleich habe ich diesen Score auch in jedes Diagram eingezeichnet (rot).
+
+Der ndzs performt dabei weitesgehend vergleichbar mit dem dfs, mit kleineren Schwankungen abhängig von der Fenstergröße.
+
+\subsubsection {Satzkontext}
+
+Die Ergebnisse der Analyse nach Satzkontext ist ernüchternd (siehe Abbildung \ref{sent}). Weder nzds noch mcds mit Kosinusmaß und standarisierter euklidischer Distanz erreichen die Präzisionswerte des Vergleichswert document frequency. Lediglich der Rückschritt auf einfache euklidische Distanz kann an die Vergleichswerte heranreichen. Dann jedoch gibt man die Vergleichbarkeit über verschiedene Vektorräume auf.
+
+
+\subsubsection{Fensterkontext, Binäres}
+
+Bemerkenswert ist hier, dass sich Mdcs mit Kosinusmaß und Mdcs mit euklidischer Distanz völlig unterschiedlich verhalten (siehe Abbildung \ref{win_bin}): Die Präzision bei Kosinusdistanz nimmt mit steigendem Kontextfenstergröße zu, die Präzision der euklidischen Distanz nimmt rapide ab. Interessanterweise ist die Präzision nur bei Kontextgröße >80 wirklich besser als der Vergleichswert document frequency.
+
+
+\subsubsection{Fensterkontext, Frequency}
+
+Es ergibt sich ein ähnliches Bild zum binären Maß (siehe Abbildung \ref{win_freq}). Auffällig ist jedoch, dass etwas früher, bei Fenstergröße 60, der mdcs mit Kosinusdistanz ein klar besseres Ergebnis als der Vergleichswert liefert. Der skalierte mdcs erreicht bei keiner getesteten Fesntergröße den Vergleichswert.
+
+
+\subsubsection{Fensterkontext, Dice Koeffizient und Chi Square}
+
+Auch hier zeigt sich der für sehr kleine Fenstergrößen akzeptable Präzisionswert und das ausgeprägte Tief im Bereich kleiner 30 (siehe Abbildung \ref{win_dice_chi}). Auch auffällig, dass erst bei sehr großem Fensterkontext die Maße eine geeignete Präzision erreichen.
+
+
+\subsection{Evaluation}
+
+Sehr überraschend ist bei diesen Ergebnissen, dass sich mit einigen Scores bessere Resultate mit sehr großen Kontextfenstern erreichen lassen. Zunächst bestand die Befürchtung, dass kein Maß an die Performanz der simplen Heuristik der document frequency herankommt. Die Ergebnisse zeigen allerdings, dass der hier vorgestellt Ansatz zumindest Potential hat, semantische Spezifität numerisch besser zu fassen als die \emph{document frequency}. In der sehr starken Simplifizierung in den Vorannahmen sind noch einige Verbesserungsmöglichkeiten enthalten, ebenso in der Auswertung der Ergebnisse, mehr dazu in Kapitel \ref{ausblick}.
+
+% \newpage
+\section{Anwendung: Anglizismen}
+
+Die Anwendung der vorgestellten performanten Maße auf vergleichende Anglizismen ist nun recht einfach: Wieder werden Wortpaare gebildet aus dem englischen Begriff und seiner eingedeutschten Entsprechung. Das Maß für das englische Fokuswort wird dann mittels englischem Korpus, das deutsche Fokuswort entsprechend im Deutschen. Die These, dass Anglizismen im Deutschen eine höhere semantische Spezifität aufweisen, lässt sich also experimentell bestätigen, wenn die Maße des englischen Fokusworts in der Regel höher als die das Deutschen ausfallen.
+
+\subsection{Textgrundlage}
+
+Um eine vergleichbare Textgrundlage im Deutschen wie Englischen zu verwenden, habe ich im Englischen auf den Reuters Corpus \citep{Lewis:2004:RNB:1005332.1005345} zurückgegriffen. Der Korpus umfasst in der verwendeten Version etwa 11.000 Nachrichtenartikel aus den späten 90ern.
+Im Deutschen habe ich den Tiger Korpus \citep{Brants2004} verwendet, der eine vergleichbare Textmenge von Artikeln aus der Frankfurter Rundschau enthält.
 
 \subsection{Resultate}
 
 \section{Konklusion}
 
-\section{Ausblick}
+\section{Caveats und Ausblick} \label{ausblick}
+
+Die vorgestellten Maße beschränken sich weitesgehend auf die reine statistische Verteilung. Es wäre bestimmt interessant, zusätzlich auch probabilistische Berechnungen zu verwenden..
+
+Stillschweigend habe ich hier vorausgesetzt, dass die getesteten Maße auch in anderen Kontexten und Sprachen (etwa im Deutschen) greifen. Das habe ich zwar grob getestet, aber keinem rigorosen Text unterzogen. Diese Hilfshypothesen erfordern eigentlich auch noch einiges an experimenteller Bestätigung.
+
+ Die hier vorgestellte Methode und das anschließende Experiment beinhalten einige vereinfachende Vorannahmen, die das Endergebnis negativ beeinflussen. Ein großer Faktor ist sicher, dass Wörter allein aufgrund ihrer lexikalischen Form identifiziert wurden. Es ist natürlich bekannt, dass gleiche lexikalische Formen unterschiedliche Bedeutungen tragen können, also ambig sind. Das hat direkten Einfluss auf den Featurevektor des Wortes - so werden auch alle Kookkurrenzen dazugezählt, die eigentlich einer anderen Wortbedeutung zugerechnet werden sollen. Abhilfe kann hier eine Word Sense Disambiguation schaffen, bei der entweder in der Präprozessierung oder bereits vorher, mittels eines annotierten Korpus, die verschiedenen Wortbedeutungen auseinandergehalten werden.
+
+ Auch wurde keinerlei unterscheidung gemacht hinsichtlich der Art des untersuchten Wortes und seiner Beziehung zu den umliegenden Wörtern, außer die direkte lexikalische Nachbarschaft. So wurden z.B. nicht Nomen untersucht und der Kontext aus Verben gebildet, die in direkter Subject-Prädikat-Relation stehen. Eine solche tiefergehende Analyse könnte u.U. dazu beitragen, die Erkennung von semantischer Spezifität zu präzisieren.
+
+Die Auswertung der Resultate ist in der vorliegenden Form eher simplistisch. So wird einfach nur verglichen, welches Maß den höheren Wert berechnet hat und dann auf höhere / niedrigere semantische Sppezifität geschlossen. Was eigentlich gewünscht ist, wäre eine statistisch zuverlässige Aussage. Die Entscheidung über die Spezifität sollte mit einer gewissen Sicherheit erfolgen. Um das zu erreichen, müsste man zunächst über zufällig ausgewählte Samples aus dem Korpus eine generelle Verteilung der Differenzen der Spezifitätsmaße von Wortpaaren berechnen. Auf dieser Grundlage ließe sich die Standardabweichung der Differenz berechnen. Unter der Zusatzannahme, dass diese Differenz normalverteilt ist (was sich auch prüfen ließe), kann dann die statistische Signifikanz der Differenz der Maße eines Wortpaares berechnet werden, dessen semantische Spezifität man untersuchen will. So könnte dann etwa erst ab einem bestimmten Schwellenwert mit großer Sicherheit davon gesprochen werden, ob sich hier semantische Spezifität stark unterscheidet. Aber gleichzeitig wird auch die Präzision der Antwort erhöht, bei unzureichender Ausprägung enthält sich das Maß dann einer Wertung.
 
 \section{Anhang}
 
 \subsection{Wordpaare}
 
+\begin{description}
+    \item[food]beverage, dessert, bread, cheese, meat, dish, butter, cake, egg, candy, pastry, vegetable, fruit, sandwich, soup, pizza, salad, relish, olives, ketchup, cookie
+    \item[beverage] alcohol, cola
+    \item[alcohol] iquor, gin, rum, brandy, cognac, wine, champagner,
+    \item[meat] liver, ham
+    \item [dish] sandwich, soup, pizza, salad
+    \item[vegetable] tomato, mushroom, legume
+    \item[fruit] pineapple, apple, peaches, strawberry
+    \item[vehicle] truck, car, trailer, campers
+    \item[car] jeep, cab, coupe
+    \item[person] worker, writer, intellectual, professional, leader, editor, entertainer, engineer,technician, journalist, commentator, novelist
+    \item[intellectual] physicist, historian, chemist
+    \item[professional] physician, educator, nurse, dentist
+    \item[entity] organism, object
+    \item[animal] mammal, bird, dof, car, horse, chicken, duck, fish, turtle, snake
+    \item[mammal] cattle, dog, cat, horse
+    \item[bird] chicken, duck
+    \item[fish] herring, salmon, trout
+    \item[metal] alloy, steel, gold, silver, iron
+    \item[location] region, country, state, city
+    \item[substance] food, metal, carcinogen, fluid
+    \item[fluid] water
+    \item[commodity] clothing, appliance
+    \item[artifact] covering, paint, roof, curtain, decoration, drug
+    \item[publication] book, article
+    \item[fabric] wool, nylon, cotton
+    \item[facility] airport, headquarters, station
+    \item[structure] house, factory, store
+    \item[organ] heart, lung
+\end{description}
+\subsection{Anglizismen}
+
+Airline, Babysitter, Bachelor, Bar, Basketball, Beach, Beat, Bestseller, Bits, Blackout, Blues, Bodybuilder, Boom, Boss, Box, Boys, Braindrain, Browser, Camper, Campus, Champion, clever, Coach, Cola, Comedy, Container, cool, Copyright, Date, Deal, Design, Drinks, Foul, Freak, Gameshow, Gangster, Hattrick, Hit, Hooligans, Image, Insider, Internet, Jazz, Keeper, Kids, Leasing, Lifestyle, Lobby, mail, Manager, Marketing, Meeting, model, Performance, Pixel, Poker, Pool, Punk, Quiz, Radar, Rapper, Scanner, Service, shop, Skateboard, Soccer, Sponsor, Stalker, Star, Start-up, Stewardess, Striptease, Surfer, super, Test, Training, Tricks, unfair, Website, Yacht, Yankee
+
 \subsection{Verwendete Technologien}
-
-
-Word Sense Disambiuation!
-
-Statistical Significance of Observed Difference
 
 \nocite{han2011}
 \nocite{heyer2008}
